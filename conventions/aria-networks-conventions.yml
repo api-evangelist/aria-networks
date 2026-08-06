@@ -1,0 +1,162 @@
+generated: '2026-08-06'
+method: probed
+source: https://api.arianetworks.com/
+note: >-
+  Aria Networks publishes no OpenAPI, no public API reference and no developer
+  guide — docs.arianetworks.com 302-redirects every path to /login. Everything
+  below was observed directly against the live API by an anonymous caller. Where a
+  convention could not be observed, it is recorded as unknown rather than assumed.
+auth_style:
+  scheme: bearer
+  format: JWT
+  header: Authorization
+  see: authentication/aria-networks-authentication.yml
+versioning:
+  scheme: uri-path
+  current: v1
+  api_version: 1.0.0
+  evidence: >-
+    https://api.arianetworks.com/ reports {"name":"Aria API","version":"1.0.0"} and
+    every advertised resource is prefixed /v1. No Accept-header or custom
+    version-header negotiation was observed.
+request_tracing:
+  header: x-request-id
+  body_field: request_id
+  server_generated: true
+  client_supplied: unknown
+  evidence: >-
+    Every response — 200, 401 and 404 under /v1 — carries an x-request-id response
+    header, and JSON error bodies repeat the same value in a request_id field. It
+    could not be determined anonymously whether a client-supplied x-request-id is
+    honoured.
+error_envelope:
+  shape: vendor
+  fields: [type, code, message, param, request_id, doc_url]
+  rfc9457: false
+  see: errors/aria-networks-problem-types.yml
+idempotency:
+  supported: unknown
+  evidence: >-
+    No Idempotency-Key handling could be observed. The API does not advertise an
+    idempotency header, the CORS preflight on /v1/fabrics allows only Content-Type
+    and Authorization request headers (an Idempotency-Key request header would be
+    rejected by that policy as configured), and no public documentation exists to
+    confirm or deny support. NOT claimed.
+pagination:
+  style: unknown
+  evidence: >-
+    Every collection resource is 401-gated, so no list response could be observed.
+rate_limiting:
+  headers_observed: []
+  evidence: >-
+    No RateLimit-*, X-RateLimit-* or Retry-After headers were returned on any
+    anonymous request, including repeated calls to /v1/health.
+cors:
+  allow_methods: [GET, POST, PUT, DELETE, PATCH, OPTIONS]
+  allow_headers: [Content-Type, Authorization]
+  max_age: 86400
+  vary: Origin
+  evidence: OPTIONS https://api.arianetworks.com/v1/fabrics
+edge:
+  cdn: cloudflare
+  tls: TLSv1.3
+  nel: true
+  evidence: server:cloudflare + report-to/nel headers on api.arianetworks.com
+discovery:
+  root_index: https://api.arianetworks.com/
+  root_index_note: >-
+    The API host root serves an unauthenticated JSON index of the whole resource
+    surface. This is the single most useful machine-readable thing Aria publishes,
+    and it is the only one. It reports "docs": null.
+resources:
+  note: >-
+    Verbatim from the provider's own unauthenticated root index, 2026-08-06.
+    Anonymous status is what the path returned with no credentials. Only /v1/health
+    is readable; the rest are gated (see the x-caution note in errors/).
+  observed:
+  - name: health
+    path: /v1/health
+    anonymous_status: 200
+    sample: '{"status":"ok","version":"1.0.0","timestamp":"2026-08-06T18:51:32.432Z"}'
+  - name: admin
+    path: /v1/admin
+    anonymous_status: 401
+  - name: alerts
+    path: /v1/alerts
+    anonymous_status: 401
+  - name: apiKeys
+    path: /v1/api-keys
+    anonymous_status: 401
+  - name: auth
+    path: /v1/auth
+    anonymous_status: 401
+  - name: cli
+    path: /v1/cli
+    anonymous_status: 401
+  - name: controllers
+    path: /v1/controllers
+    anonymous_status: 401
+  - name: devices
+    path: /v1/devices
+    anonymous_status: 401
+  - name: fabrics
+    path: /v1/fabrics
+    anonymous_status: 401
+  - name: fabricConfig
+    path: /v1/fabrics/{fabric_id}/config
+    anonymous_status: 401
+  - name: metrics
+    path: /v1/metrics
+    anonymous_status: 401
+  - name: members
+    path: /v1/members
+    anonymous_status: 401
+  - name: releases
+    path: /v1/releases
+    anonymous_status: 401
+  - name: sites
+    path: /v1/sites
+    anonymous_status: 401
+  - name: support
+    path: /v1/support
+    anonymous_status: 401
+  - name: webhooks
+    path: /v1/webhooks
+    anonymous_status: 401
+  - name: docs
+    path: null
+    anonymous_status: null
+    note: The provider's own index reports docs as null.
+x-gaps:
+  note: >-
+    Recorded for the provider, not scored against them. These are the specific,
+    cheap fixes that would make the Aria API legible to an integrator or an agent.
+  items:
+  - >-
+    Every error response points at https://api.arianetworks.com/reference, which
+    returns 404. Publishing that reference — or changing doc_url — is a one-line
+    fix that currently sends every failing developer to a dead page.
+  - >-
+    The root index reports "docs": null. Pointing it at a public OpenAPI would make
+    the whole surface machine-discoverable without opening any data.
+  - >-
+    docs.arianetworks.com is a Mintlify site with login on every path, including
+    /llms.txt and /docs.json. Mintlify serves both publicly by default; the login
+    wall is what removes Aria from agent-readable discovery.
+  - >-
+    No WWW-Authenticate header on 401, so the bearer/JWT scheme is only discoverable
+    by sending a deliberately malformed credential.
+  - >-
+    A /v1/webhooks resource exists but no event catalog is published, so no AsyncAPI
+    or webhook contract could be captured.
+x-evidence:
+- url: https://api.arianetworks.com/
+  http_status: 200
+  content_type: application/json
+  fetched: '2026-08-06'
+- url: https://api.arianetworks.com/v1/health
+  http_status: 200
+  fetched: '2026-08-06'
+- url: https://docs.arianetworks.com/
+  http_status: 302
+  fetched: '2026-08-06'

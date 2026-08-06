@@ -1,0 +1,60 @@
+generated: '2026-08-06'
+method: probed
+source: https://api.arianetworks.com/
+versioning:
+  scheme: uri-path
+  current: v1
+  api_version: 1.0.0
+  docs: null
+  evidence: >-
+    https://api.arianetworks.com/ returns {"name":"Aria API","version":"1.0.0"};
+    https://api.arianetworks.com/v1/health returns
+    {"status":"ok","version":"1.0.0"}. No published versioning policy.
+deprecation:
+  policy_url: null
+  sunset_header: unknown
+  evidence: >-
+    No Deprecation or Sunset response headers were observed on any anonymous
+    request, and no deprecation policy page exists on arianetworks.com.
+sla:
+  url: null
+  uptime_target: null
+status_page:
+  url: null
+  evidence: >-
+    status.arianetworks.com does not resolve (NXDOMAIN) and arianetworks.com/status
+    returns 404. https://arianetworks.statuspage.io/ returns HTTP 200 but is a
+    SOFT-404 — it 302s to https://www.atlassian.com/software/statuspage and is
+    byte-identical to the response for a control subdomain that does not exist, so
+    it is NOT an Aria status page and no StatusPage pointer is wired.
+health_endpoint:
+  url: https://api.arianetworks.com/v1/health
+  status: 200
+  anonymous: true
+  note: >-
+    The only anonymously readable operation on the API. Returns status, version and
+    an ISO timestamp. This is a liveness probe, not a status page.
+releases:
+  resource: /v1/releases
+  status: gated
+  note: >-
+    The API advertises a releases resource, so software release metadata is
+    programmatically available to customers, but it returns 401 anonymously and no
+    public changelog is published.
+changelog:
+  url: null
+  note: >-
+    arianetworks.com/news is a company news and blog index, not a product or API
+    changelog. It is wired as Blog, not as ChangeLog.
+deprecated_operations: []
+x-evidence:
+- url: https://api.arianetworks.com/v1/health
+  http_status: 200
+  fetched: '2026-08-06'
+- url: https://arianetworks.com/status
+  http_status: 404
+  fetched: '2026-08-06'
+- url: https://arianetworks.statuspage.io/
+  http_status: 200
+  fetched: '2026-08-06'
+  verdict: soft-404 (identical to control; redirects to atlassian.com)

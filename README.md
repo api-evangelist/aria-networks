@@ -42,5 +42,17 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Aria Networks is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://forgeglobal.com/aria-networks_stock/
+Aria Networks, Inc. is a Palo Alto, California networking company founded in 2025 by Mansour
+Karam (founder and former CEO of Apstra, acquired by Juniper Networks in 2020) that builds
+"Deep Networking" — an AI-native networking system for AI factories and GPU data centers.
+The platform pairs purpose-built 800GbE and 1.6Tbps Ethernet switches on Broadcom Tomahawk 5
+and Tomahawk 6 silicon running a hardened SONiC network OS with microsecond-resolution
+telemetry agents on switch ASICs, switch-OS kernels, transceivers, server NICs and GPU
+clusters, plus a reasoning layer that detects, root-causes and resolves fabric issues. Aria
+measures itself on Model FLOPS Utilization (MFU) and token efficiency. The company disclosed
+$125M in funding from Sutter Hill Ventures, Atreides Management, Valor Equity Partners and
+Eclipse Ventures in April 2026.
+
+- https://arianetworks.com/
+- https://api.arianetworks.com/ — the Aria API 1.0.0 root index (unauthenticated)
+- https://docs.arianetworks.com/ — developer documentation (customer login required)

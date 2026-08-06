@@ -1,18 +1,65 @@
 aid: aria-networks
 name: Aria Networks
-description: 'Aria Networks is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: 'Aria Networks, Inc. is a Palo Alto, California networking company founded
+  in 2025 by Mansour Karam (founder and former CEO of Apstra, acquired by Juniper Networks
+  in 2020) that builds "Deep Networking" — an AI-native networking system for AI factories
+  and GPU data centers. The platform pairs purpose-built 800GbE and 1.6Tbps Ethernet
+  switches on Broadcom Tomahawk 5 and Tomahawk 6 silicon running a hardened SONiC network
+  OS with microsecond-resolution telemetry agents on switch ASICs, switch-OS kernels,
+  transceivers, server NICs and GPU clusters, plus a reasoning layer that detects, root-causes
+  and resolves fabric issues. Aria measures itself on Model FLOPS Utilization (MFU) and
+  token efficiency rather than traditional network metrics. The company disclosed $125M
+  in funding from Sutter Hill Ventures, Atreides Management, Valor Equity Partners and
+  Eclipse Ventures in April 2026. A production REST API is live at api.arianetworks.com
+  (Aria API 1.0.0), but its reference documentation and machine-readable specification
+  sit behind a customer login.'
+image: https://arianetworks.com/og/aria_opengraph.png
 url: https://raw.githubusercontent.com/api-evangelist/aria-networks/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-08-06'
 modified: '2026-08-06'
 tags:
 - Company
-apis: []
+- Networking
+- Data Center
+- Artificial Intelligence
+- Infrastructure
+- Telemetry
+- Observability
+- Ethernet
+- Hardware
+apis:
+- name: Aria API
+  description: 'The Aria API is the REST control surface for the Aria Networks Deep Networking
+    platform. Its unauthenticated root index at https://api.arianetworks.com/ advertises
+    version 1.0.0 and sixteen resource groups — health, admin, alerts, api-keys, auth,
+    cli, controllers, devices, fabrics, fabric config, metrics, members, releases, sites,
+    support and webhooks — under a /v1 path prefix. Only /v1/health answers anonymously;
+    every other resource returns HTTP 401 with a JSON error envelope. The root index
+    reports "docs": null and the doc_url in every error response points at
+    https://api.arianetworks.com/reference, which is not published (404).'
+  humanURL: https://arianetworks.com/product
+  baseURL: https://api.arianetworks.com
+  tags:
+  - Networking
+  - Fabrics
+  - Devices
+  - Telemetry
+  - Metrics
+  - Alerts
+  properties:
+  - type: Authentication
+    url: authentication/aria-networks-authentication.yml
+  - type: ErrorCatalog
+    url: errors/aria-networks-problem-types.yml
+  - type: Conventions
+    url: conventions/aria-networks-conventions.yml
+  - type: Lifecycle
+    url: lifecycle/aria-networks-lifecycle.yml
+  - type: Conformance
+    url: conformance/aria-networks-conformance.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -20,4 +67,53 @@ maintainers:
   email: info@apis.io
 common:
 - type: Website
-  url: https://forgeglobal.com/aria-networks_stock/
+  url: https://arianetworks.com/
+- type: Documentation
+  url: https://docs.arianetworks.com/
+- type: Login
+  url: https://app.arianetworks.com/login
+- type: Blog
+  url: https://arianetworks.com/news
+- type: TermsOfService
+  url: https://arianetworks.com/terms
+- type: PrivacyPolicy
+  url: https://arianetworks.com/privacy
+- type: LicenseAgreement
+  url: https://arianetworks.com/eula
+- type: Support
+  url: mailto:sales@arianetworks.com
+- type: LinkedIn
+  url: https://www.linkedin.com/company/aria-networks-inc
+- type: Twitter
+  url: https://x.com/AriaNetworks
+- type: DomainSecurity
+  url: security/aria-networks-domain-security.yml
+- type: LLMsTxt
+  url: llms/aria-networks-llms.txt
+x-enrichment:
+  date: '2026-08-06'
+  status: minimal
+  artifacts_added: 7
+  pass: local-v1
+x-coverage:
+  state: gated
+  reason: customer-only-docs
+  detail: >-
+    Aria Networks runs a live REST API at api.arianetworks.com whose unauthenticated
+    root index advertises sixteen /v1 resource groups, but its Mintlify documentation
+    site 302-redirects every single path — including /llms.txt and /docs.json — to
+    /login, and the doc_url that every API error response points at
+    (https://api.arianetworks.com/reference) returns 404, so no reference or spec is
+    reachable without a customer account.
+  evidence:
+  - url: https://docs.arianetworks.com/
+    status: 302
+  - url: https://api.arianetworks.com/
+    status: 200
+  - url: https://api.arianetworks.com/reference
+    status: 404
+  - url: https://api.arianetworks.com/v1/fabrics
+    status: 401
+  - url: https://arianetworks.com/llms.txt
+    status: 404
+  checked: '2026-08-06'

@@ -1,0 +1,101 @@
+generated: '2026-08-06'
+method: probed
+source: https://api.arianetworks.com/v1/
+format: vendor-envelope
+format_note: >-
+  NOT RFC 9457. The Aria API returns application/json (never
+  application/problem+json) with a Stripe-flavored error envelope. There is no
+  "type" URI — the "type" field carries a short error class string, not a
+  dereferenceable URI, so RFC 9457 tooling will not resolve it.
+envelope:
+  content_type: application/json
+  fields:
+  - name: type
+    description: Error class string. Only "invalid_request_error" was observed anonymously.
+  - name: code
+    description: Machine-readable error code. Null on every anonymous response observed.
+  - name: message
+    description: Human-readable message.
+  - name: param
+    description: Offending request parameter. Null on every anonymous response observed.
+  - name: request_id
+    description: >-
+      Per-request correlation id, mirrored in the x-request-id response header on
+      every response including 200s.
+  - name: doc_url
+    description: >-
+      Deep link into the API reference, of the form
+      https://api.arianetworks.com/reference#tag/<tag>/<METHOD>/<path>. The target
+      is NOT published — https://api.arianetworks.com/reference returns HTTP 404 —
+      so every error the API emits points a developer or agent at a dead page.
+  example: |
+    {
+      "type": "invalid_request_error",
+      "code": null,
+      "message": "Authentication required",
+      "param": null,
+      "request_id": "756eb08c-e800-498d-a866-5a4cdbfd81e9",
+      "doc_url": "https://api.arianetworks.com/reference#tag/fabrics/GET/v1/fabrics"
+    }
+problems:
+- status: 401
+  type: invalid_request_error
+  title: Authentication required
+  detail: >-
+    Returned for every /v1/* request made without an Authorization header.
+  observed_on:
+  - GET /v1/admin
+  - GET /v1/alerts
+  - GET /v1/api-keys
+  - GET /v1/auth
+  - GET /v1/cli
+  - GET /v1/controllers
+  - GET /v1/devices
+  - GET /v1/fabrics
+  - GET /v1/metrics
+  - GET /v1/members
+  - GET /v1/releases
+  - GET /v1/sites
+  - GET /v1/support
+  - GET /v1/webhooks
+- status: 401
+  type: invalid_request_error
+  title: Invalid Compact JWS
+  detail: >-
+    Returned when an Authorization: Bearer credential is present but is not a
+    parseable compact-serialized JWS/JWT.
+  observed_on:
+  - GET /v1/fabrics
+- status: 404
+  type: null
+  title: 404 Not Found
+  detail: >-
+    Paths outside the /v1 namespace return a bare text/plain body "404 Not Found"
+    with no JSON envelope — a second, inconsistent error shape on the same host.
+  content_type: text/plain
+  observed_on:
+  - GET /openapi.json
+  - GET /reference
+  - GET /.well-known/security.txt
+x-caution:
+  authentication_precedes_routing: >-
+    Every path under /v1 returns 401 "Authentication required" whether or not the
+    resource exists — GET /v1/does-not-exist-xyz returns the same 401 as
+    GET /v1/fabrics, with a doc_url synthesized from the bogus path. A 401 under
+    /v1 is therefore NOT evidence that an endpoint exists. Only the sixteen
+    resources named in the unauthenticated root index at
+    https://api.arianetworks.com/ are confirmed. This control-path check was run
+    explicitly so no endpoint would be credited on a catch-all response.
+x-evidence:
+- url: https://api.arianetworks.com/v1/fabrics
+  http_status: 401
+  content_type: application/json
+  fetched: '2026-08-06'
+- url: https://api.arianetworks.com/v1/does-not-exist-xyz
+  http_status: 401
+  content_type: application/json
+  fetched: '2026-08-06'
+- url: https://api.arianetworks.com/reference
+  http_status: 404
+  content_type: text/plain
+  fetched: '2026-08-06'

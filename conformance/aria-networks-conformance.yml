@@ -1,0 +1,94 @@
+generated: '2026-08-06'
+method: probed
+source: https://api.arianetworks.com/
+note: >-
+  Derived from live observation of the Aria API only. Aria publishes no OpenAPI and
+  no compliance or certification page, so nothing here is asserted from a provider
+  claim. `conforms: unknown` means the check could not be run anonymously — it is
+  not a failure.
+standards:
+- id: openapi
+  conforms: false
+  evidence: >-
+    No OpenAPI or Swagger document at any probed location on api.arianetworks.com,
+    arianetworks.com or docs.arianetworks.com. The root index reports "docs": null.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: >-
+    Errors are application/json with a vendor envelope (type/code/message/param/
+    request_id/doc_url), never application/problem+json, and "type" is not a URI.
+- id: rfc6750-bearer-token
+  conforms: partial
+  evidence: >-
+    Credentials are sent as Authorization: Bearer and parsed as a compact JWS, but
+    the 401 response omits the WWW-Authenticate challenge header RFC 6750 requires.
+- id: jwt
+  conforms: true
+  evidence: >-
+    "Invalid Compact JWS" returned for a malformed bearer credential on
+    GET /v1/fabrics.
+- id: oauth2
+  conforms: unknown
+  evidence: >-
+    No /.well-known/oauth-authorization-server or /.well-known/oauth-protected-resource
+    (both 404). The /v1/auth resource is gated. No OAuth flow could be observed.
+- id: oidc
+  conforms: false
+  evidence: /.well-known/openid-configuration returns 404 on every host.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt returns 404 on arianetworks.com and api.arianetworks.com.
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: No Deprecation or Sunset headers observed on any response.
+- id: a2a-agent-card
+  conforms: false
+  evidence: >-
+    /.well-known/agent-card.json and /.well-known/agent.json return 404 on
+    arianetworks.com and api.arianetworks.com, and 302 to /login on
+    docs.arianetworks.com.
+- id: llms-txt
+  conforms: false
+  evidence: >-
+    /llms.txt returns 404 on arianetworks.com and 302 to /login on
+    docs.arianetworks.com.
+- id: content-signals
+  conforms: true
+  evidence: >-
+    https://arianetworks.com/robots.txt carries "Content-Signal:
+    search=yes,ai-train=no" on the User-agent:* group, plus explicit Disallow:/ for
+    nine named AI crawlers (Amazonbot, Applebot-Extended, Bytespider, CCBot,
+    ClaudeBot, CloudflareBrowserRenderingCrawler, Google-Extended, GPTBot,
+    meta-externalagent). A deliberate, machine-readable AI-usage preference.
+- id: hsts
+  conforms: partial
+  evidence: >-
+    arianetworks.com sets Strict-Transport-Security max-age=63072000;
+    api.arianetworks.com does not set HSTS at all.
+- id: dnssec
+  conforms: false
+  evidence: No DNSKEY records for arianetworks.com.
+- id: dmarc
+  conforms: partial
+  evidence: DMARC record present with p=none (monitor only).
+- id: caa
+  conforms: false
+  evidence: No CAA records for arianetworks.com.
+compliance_program:
+  published: false
+  certifications: []
+  evidence: >-
+    No trust center (trust.arianetworks.com NXDOMAIN), no /security, /trust or
+    /compliance page on arianetworks.com (all 404), and no SOC 2 / ISO 27001 /
+    PCI / HIPAA / FedRAMP claim found on the public site. No Compliance pointer is
+    wired.
+x-evidence:
+- url: https://arianetworks.com/robots.txt
+  http_status: 200
+  fetched: '2026-08-06'
+- url: https://api.arianetworks.com/
+  http_status: 200
+  fetched: '2026-08-06'
+- url: https://arianetworks.com/.well-known/security.txt
+  http_status: 404
+  fetched: '2026-08-06'

@@ -1,0 +1,70 @@
+generated: '2026-08-06'
+method: probed
+source: live GET of /.well-known/* on every Aria Networks host in apis.yml
+note: >-
+  No /.well-known/ document was found on any Aria Networks host. Recorded here as
+  negative evidence so a later run does not re-litigate it. The website host answers
+  a real 404 (not a soft-404 SPA catch-all) for every path probed, and the docs host
+  302-redirects every path — including /.well-known/* — to /login.
+hosts:
+- host: https://arianetworks.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /llms.txt
+    status: 404
+  - path: /sitemap.xml
+    status: 404
+  - path: /robots.txt
+    status: 200
+    note: >-
+      Present. Carries a Content-Signal directive (search=yes,ai-train=no) on
+      User-agent:* and an explicit Disallow:/ for Amazonbot, Applebot-Extended,
+      Bytespider, CCBot, ClaudeBot, CloudflareBrowserRenderingCrawler,
+      Google-Extended, GPTBot and meta-externalagent. The wildcard group is
+      Allow:/ — this profile was built under the wildcard group.
+- host: https://api.arianetworks.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://docs.arianetworks.com
+  documents:
+  - path: /.well-known/agent-card.json
+    status: 302
+    note: redirects to /login
+  - path: /.well-known/security.txt
+    status: 302
+    note: redirects to /login
+  - path: /llms.txt
+    status: 302
+    note: redirects to /login
+  - path: /docs.json
+    status: 302
+    note: redirects to /login
+x-evidence:
+  fetched: '2026-08-06'
+  user_agent: APIEvangelistBot/1.0

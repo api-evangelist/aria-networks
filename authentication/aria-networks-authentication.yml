@@ -1,0 +1,68 @@
+generated: '2026-08-06'
+method: probed
+source: https://api.arianetworks.com/v1/fabrics
+note: >-
+  Aria Networks publishes no OpenAPI and no public authentication documentation —
+  docs.arianetworks.com redirects every path to /login. This profile is therefore
+  derived from what the live API itself reveals to an anonymous caller, not from a
+  provider-published auth page. Every value below is backed by an observed response.
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  bearerFormat: JWT
+  in: header
+  header: Authorization
+  evidence: >-
+    GET https://api.arianetworks.com/v1/fabrics with
+    "Authorization: Bearer <invalid>" returns HTTP 401
+    {"type":"invalid_request_error","message":"Invalid Compact JWS", ...}. The
+    "Invalid Compact JWS" message confirms the bearer credential is parsed as a
+    compact-serialized JWS (JWT). Without the header the same request returns
+    "Authentication required".
+  observed: '2026-08-06'
+challenge:
+  www_authenticate: false
+  note: >-
+    The API returns 401 with a JSON body but does NOT emit a WWW-Authenticate
+    response header, so an agent cannot discover the scheme from the challenge
+    alone.
+cors:
+  allow_headers:
+  - Content-Type
+  - Authorization
+  allow_methods:
+  - GET
+  - POST
+  - PUT
+  - DELETE
+  - PATCH
+  - OPTIONS
+  max_age: 86400
+  evidence: OPTIONS https://api.arianetworks.com/v1/fabrics
+key_management:
+  resource: /v1/api-keys
+  status: gated
+  note: >-
+    The unauthenticated root index at https://api.arianetworks.com/ advertises an
+    "apiKeys": "/v1/api-keys" resource and an "auth": "/v1/auth" resource, so
+    programmatic key issuance exists. Both return 401 anonymously and neither is
+    documented publicly, so the credential lifecycle (issuance, rotation, scoping)
+    could not be observed.
+oauth2: false
+openid_connect: false
+scopes_published: false
+docs: null
+docs_note: >-
+  https://docs.arianetworks.com/ HTTP 302 -> /login for every path. No public
+  authentication reference exists.
+x-evidence:
+- url: https://api.arianetworks.com/v1/fabrics
+  http_status: 401
+  fetched: '2026-08-06'
+- url: https://api.arianetworks.com/v1/health
+  http_status: 200
+  fetched: '2026-08-06'
+- url: https://docs.arianetworks.com/
+  http_status: 302
+  fetched: '2026-08-06'

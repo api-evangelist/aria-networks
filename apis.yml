@@ -87,6 +87,11 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: ParentCompany
+  url: https://apis.io/providers/juniper-networks/
+  name: Juniper Networks
+  x-relationship: acquired
+  x-evidence: "is a Palo Alto, California networking company founded in 2025 by Mansour Karam (founder and former CEO of Apstra, acquired by Juniper Networks in 2020) that builds 'Deep Networking' — an AI-native networking system for AI factories and GPU "
 - type: Website
   url: https://arianetworks.com/
 - type: Documentation
